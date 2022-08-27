@@ -66,9 +66,9 @@ def validar_n():
 
 # Punto 1_______________________________________________________________________________________________________________
 def crear_titulo():
-    primer_palabra = ['Medidor','Contador','Seleccionador','Registrador', 'Archibador', 'calculador']
+    primer_palabra = ['Medidor','Contador','Seleccionador','Registrador', 'Archivador', 'Calculador']
     segunda_palabra= [ 'unidades', 'autos','personal', 'proyectos', ]
-    tercer_palabra = ['beta.', '2.0.', 'pro.', '3.0.', 'secret proyect.']
+    tercer_palabra = ['beta.', '2.0.', 'pro.', '3.0.', 'secret project.']
     titulo = random.choice(primer_palabra) +' de '+random.choice(segunda_palabra) + ' '+random.choice(tercer_palabra)
     return  titulo
 
@@ -86,12 +86,13 @@ def crear_fecha():
 
 def crear_lenjuaje():
     lenguaje = ['Python','Java','C++','Javascript','Shell','HTML','Ruby','Swift','C#','VB','Go']
+
     lenguaje_proyecto = random.choice(lenguaje)
     return lenguaje_proyecto
 
 
 def crear_cant_lineas():
-    lineas=random.randint(1,250)
+    lineas=str(random.randint(1,250))
     return lineas
 
 def crear_proyectos(n,vec,):
@@ -114,15 +115,80 @@ def crear_proyectos(n,vec,):
 
 #Punto 2 _______________________________________________________________________________________________________________
 
-#Scrip principal
+def ordenar_proyectos(vec):
+    n = len(vec)
+    for i in range(n-1):
+        for j in range(i+1,n):
+            if vec[i].titulo > vec[j].titulo:
+                vec[i],vec[j] = vec[j],vec[i]
+
 def mostrar_proyecto(vec):
     for i in vec:
         print(Proyecto.__str__(i))
+
+# Punto 3 ______________________________________________________________________________________________________________
+
+def modifica_cant_y_fecha(vec,i):
+    vec[i].cant_lineas= input('Ingrese la nueva cantidad de lineas de codigo: ')
+    print('Ingrese la fecha de modificacion en formato dd-mm-yyyy: ')
+    dia='0'
+    while len(dia)!=2 and dia <'1' or dia >'31':
+      dia= input('Dia: ' )
+    mes='0'
+    while len(mes) !=2 and mes < '1' or mes >'12':
+      mes=input('Mes: ')
+    anio='0'
+    while anio < '2000' or anio >'2022':
+        anio=input('Año: ')
+    fecha_act = dia+'/'+mes+'/'+anio
+    vec[i].fecha = fecha_act
+
+# Punto 4 ______________________________________________________________________________________________________________
+
+def agrupar_por_lenguaje(vec,total_lineas_lenguajes):
+    #recorrer proyectos y sumar lineas de codigo por lenguaje
+    for i in range(len(vec)):
+       r=vec[i].lenguaje
+       for l in range(len(total_lineas_lenguajes)):
+           if total_lineas_lenguajes[l][0] == r :
+              total_lineas_lenguajes[l][1]  += int(vec[i].cant_lineas)
+
+    # Imprimir lenguajes con mas de cero lineas de codigo
+    for p in range(len(total_lineas_lenguajes)):
+        if total_lineas_lenguajes[p][1] != 0:
+
+         print('Lenguaje: '+ str(total_lineas_lenguajes[p][0]) + '. Cantidad de lineas de codigo: '+ str(total_lineas_lenguajes[p][1]) )
+
+
+    # Poner contadores en cero para que cada vez que se ingresa al menu vuelva a calcular teniendo en cuenta las modificaciones
+    for l in range(len(total_lineas_lenguajes)):
+
+              total_lineas_lenguajes[l][1]  = 0
+
+# Punto 5_______________________________________________________________________________________________________________
+
+def resumen_por_anio(vec):
+    cantidad_proyectos = 0
+    for a in range(2000,2023):
+        for i in range(len(vec)):
+          if a == vec[i].fecha[-4:]:
+             cantidad_proyectos +=1
+             print(cantidad_proyectos)
+        if cantidad_proyectos !=0:
+            print('Año :'+str(a) +' ' +str(cantidad_proyectos) + ' Proyectos.')
+
+########################################################################################################################
+#                                               Script principal                                                        #
+########################################################################################################################
+
+
 
 
 def main():
 
     vec = []
+    total_lineas_lenguaje = [['Python',0],['Java',0],['C++',0],['Javascript',0],['Shell',0],
+                             ['HTML',0],['Ruby',0],['Swift',0],['C#',0],['VB',0],['Go',0]]
     #titulo
     print('\n----- Gestor de Proyectos Aed 2022 -----  \n')
 
@@ -133,19 +199,42 @@ def main():
         mostrar_menu()
         #print('| '*22)
         op=int(input('\nIngrese el numero del menu que quiera acceder: \n'))
+
         #opcion 1 Cargar proyectos
         if op == 1:
             n=validar_n()
             crear_proyectos(n,vec)
 
+        #ordenar proyectos alfabeticamente
         elif op == 2:
+            ordenar_proyectos(vec)
             mostrar_proyecto(vec)
+
+        #buscar y editar fecha y codigo
         elif op == 3:
-            pass
+            existe = False
+            buscar = int(input('\nIngrese el numero del proyecto que desea consultar: '))
+            for i in range(len(vec)):
+
+                if vec[i].numero == buscar:
+                    existe = True
+                    print('\n El proyecto solicitado es:\n',vec[i])
+                    if input('\nPresione "s" para modificar el codigo y la fecha, o cualquier tecla para salir:').lower() == "s":
+                        modifica_cant_y_fecha(vec,i)
+                        print('Lo cambios fueron modificados con exito, detalle:\n',vec[i])
+            if existe == False:
+                    print('El proyecto no existe.')
+            existe = False
+
+        # sumar cantidad de lineas por lenguaje
         elif op == 4:
-            pass
+            agrupar_por_lenguaje(vec,total_lineas_lenguaje)
+
+        #resumen por anio
         elif op == 5:
-            pass
+            resumen_por_anio(vec)
+
+
         elif op == 6:
             pass
         elif op == 7:

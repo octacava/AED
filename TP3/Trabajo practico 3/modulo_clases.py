@@ -14,12 +14,10 @@ class Proyecto:
 
    #funcion de retorno str con datos de los campos
    def __str__(self):
-      res=  "Numero: " + str(self.numero) + ", titulo: " + str(self.titulo) + " fecha: " + str(self.fecha) + \
+      res=   " titulo: " + str(self.titulo) +" Numero: " + str(self.numero) + " fecha: " + str(self.fecha) + \
             " lenguaje: " + str(self.lenguaje) + " cantidad de lineas: " + str(self.cant_lineas)
       return res
 
+
 ########################################################################################################################
-
-
-
 
