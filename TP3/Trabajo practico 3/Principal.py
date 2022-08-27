@@ -167,15 +167,26 @@ def agrupar_por_lenguaje(vec,total_lineas_lenguajes):
 
 # Punto 5_______________________________________________________________________________________________________________
 
-def resumen_por_anio(vec):
+def resumen_por_anio(vec,proyectos_anios):
     cantidad_proyectos = 0
+    ciclo=0
     for a in range(2000,2023):
+        proyectos_anios.append([a,0])
+
         for i in range(len(vec)):
-          if a == vec[i].fecha[-4:]:
-             cantidad_proyectos +=1
-             print(cantidad_proyectos)
-        if cantidad_proyectos !=0:
-            print('Año :'+str(a) +' ' +str(cantidad_proyectos) + ' Proyectos.')
+
+          if a == int(vec[i].fecha[-4:]):
+            proyectos_anios[ciclo][1] +=1
+
+        ciclo +=1
+    for p in range(len(proyectos_anios)):
+            if proyectos_anios[p][1] != 0:
+                print('Para el año: ' +str(proyectos_anios[p][0]) + '. Se registran: ' +str(proyectos_anios[p][1]) + ' proyectos.')
+    #borrar datos para no pisar futuras consultas
+    proyectos_anios.clear()
+
+# Punto 6 ______________________________________________________________________________________________________________
+
 
 ########################################################################################################################
 #                                               Script principal                                                        #
@@ -189,6 +200,7 @@ def main():
     vec = []
     total_lineas_lenguaje = [['Python',0],['Java',0],['C++',0],['Javascript',0],['Shell',0],
                              ['HTML',0],['Ruby',0],['Swift',0],['C#',0],['VB',0],['Go',0]]
+    proyectos_anios = []
     #titulo
     print('\n----- Gestor de Proyectos Aed 2022 -----  \n')
 
@@ -232,7 +244,7 @@ def main():
 
         #resumen por anio
         elif op == 5:
-            resumen_por_anio(vec)
+            resumen_por_anio(vec,proyectos_anios)
 
 
         elif op == 6:
@@ -249,6 +261,6 @@ def main():
 
 
 #----------------------------------------------------------------------------------------------------------------------
-#Invocacion scrip principal
+#Invocacion script principal
 if __name__ == '__main__':
     main()
